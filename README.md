@@ -7,4 +7,4 @@ A Programmable Pokemon Showdown Battle Bot
 
 2. [Download PhantomJS](http://phantomjs.org/download.html) or ```brew install phantomjs```
 
-3. Try ```python test.py``` and ```phantomjs hello.js```
+3. Run ```python test.py```
