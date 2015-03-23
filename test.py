@@ -12,11 +12,10 @@ def main():
     driver.set_window_size(1200, 800)
     driver.get(showdown)
     print driver.current_url
-    driver.implicitly_wait(3)
     login()
-    driver.implicitly_wait(3)
-    driver.find_element_by_name('search').click()
-    print "Battle Started"
+    join_battle()
+    
+    '''
     timer = False
     while True: #len(driver.find_elements_by_name('closeAndMainMenu')) > 0:
         wait.until(EC.element_to_be_clickable((By.NAME,'chooseMove')))
@@ -24,6 +23,7 @@ def main():
         if not timer and len(driver.find_elements_by_name('setTimer')) > 0:
             driver.find_element_by_name('setTimer').click()
             timer = True
+    '''
 
     #driver.quit()
 
@@ -39,5 +39,12 @@ def login():
     driver.find_element_by_name('password').send_keys(password)
     driver.find_element_by_css_selector('button[type=submit]').click()
     print "Logged in."
+
+def join_battle():
+    driver.implicitly_wait(1)
+    wait.until(EC.element_to_be_clickable((By.NAME,'search')))
+    driver.implicitly_wait(2)
+    driver.find_element_by_name('search').click()
+    print "Battle Started"
 
 main()
