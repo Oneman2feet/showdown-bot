@@ -55,11 +55,12 @@ def main():
         print('moves: ' + str([m.get_attribute('data-move') for m in moves]), file=log)
         print('switches: ' + str([s.text for s in switches]), file=log)
 
-        import pdb; pdb.set_trace()
+        # silly random strategy
         if len(moves) == 0:
-            switches[1].click()
-            continue
-        moves[0].click()
+            switches[int(random()*len(switches))].click()
+        else:
+            moves[int(random()*len(moves))].click()
+
         if not timer and len(driver.find_elements_by_name('setTimer')) > 0:
             driver.find_element_by_name('setTimer').click()
             timer = True
