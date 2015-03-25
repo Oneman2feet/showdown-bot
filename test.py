@@ -2,13 +2,17 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from random import random
+from time import sleep
 
 debug = True
 showdown = 'http://play.pokemonshowdown.com/'
 driver = webdriver.Firefox() if debug else webdriver.PhantomJS()
 wait = WebDriverWait(driver, 120)
+shortwait = WebDriverWait(driver, 15)
 username = 'zarly'
 password = 'phantom'
+log = open('log', 'w')
 
 def login():
     wait.until(EC.element_to_be_clickable((By.NAME,'login')))
@@ -35,36 +39,27 @@ def main():
     join_battle()
     
     timer = False
-    while True: #len(driver.find_elements_by_name('closeAndMainMenu')) > 0:
-        # Conditional waits ('or') don't seem to be supported...
+
+    while True:  #len(driver.find_elements_by_name('closeAndMainMenu')) > 0:
         # It's possible we can: 
         # - only switch (fainted)
         # - only move (arena trap, outrage, etc)
         # - both
         # TODO need to account for u-turn and volt-switch too, in which
         # a move consists of both 
+        switches = []
+        moves = []
+        while len(switches) == 0 or len(moves) == 0:
+            moves = driver.find_elements_by_name('chooseMove')
+            switches = driver.find_elements_by_name('chooseSwitch')
+        print('moves: ' + str([m.get_attribute('data-move') for m in moves]), file=log)
+        print('switches: ' + str([s.text for s in switches]), file=log)
 
-        #try:
-        #    wait.until(EC.element_to_be_clickable((By.NAME,'chooseMove')))
-        #    moves = driver.find_elements_by_name('chooseMove')
-        #except:
-        #    print('no valid moves available... :(')
-        #    moves = []
-        #try:
-        #    wait.until(EC.element_to_be_clickable((By.NAME, 'chooseSwitch')))
-        #    switches = driver.find_elements_by_name('chooseSwitch')
-        #except:
-        #    print('no valid switches available... :(')
-        #    switches = []
-        wait.until(EC.presence_of_element_located((By.CLASS, 'battle-controls')))
-        moves = driver.find_elements_by_name('chooseMove')
-        switches = driver.find_elements_by_name('chooseSwitch')
-        print('moves: ' + str(moves))
-        print('switches: ' + str(switches))
+        import pdb; pdb.set_trace()
         if len(moves) == 0:
-            switches[0].click()
+            switches[1].click()
             continue
-        driver.find_element_by_name('chooseMove').click()
+        moves[0].click()
         if not timer and len(driver.find_elements_by_name('setTimer')) > 0:
             driver.find_element_by_name('setTimer').click()
             timer = True
@@ -72,6 +67,8 @@ def main():
 
 
 if __name__=='__main__':
-    main()
-
-(mu*I1*I2*ln((((L^2)/4) + h^2)/(h^2))/(4*pi))
+    try:
+        main()
+    finally:
+        log.close()
+        driver.quit()
