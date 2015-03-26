@@ -52,18 +52,25 @@ def main():
         while len(switches) == 0 or len(moves) == 0:
             moves = driver.find_elements_by_name('chooseMove')
             switches = driver.find_elements_by_name('chooseSwitch')
-        print('moves: ' + str([m.get_attribute('data-move') for m in moves]), file=log)
-        print('switches: ' + str([s.text for s in switches]), file=log)
+
+        log.write('moves: %s\n' % str([m.get_attribute('data-move') for m in moves]))
+        log.write('switches: %s\n' % str([s.text for s in switches]))
 
         # silly random strategy
         if len(moves) == 0:
-            switches[int(random()*len(switches))].click()
+            i = int(random()*len(switches))
+            log.write('Switching to %s\n' % switches[i].text)
+            switches[i].click()
         else:
-            moves[int(random()*len(moves))].click()
+            i = int(random()*len(switches))
+            log.write('Using %s\n' % moves[i].get_attribute('data-move'))
+            moves[i].click()
 
         if not timer and len(driver.find_elements_by_name('setTimer')) > 0:
             driver.find_element_by_name('setTimer').click()
             timer = True
+
+        log.flush()
     #driver.quit()
 
 
